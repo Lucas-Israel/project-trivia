@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import ConfigButton from '../components/ConfigButton';
 import { fetchLogApi } from '../redux/actions';
 
 class Login extends Component {
@@ -62,6 +63,7 @@ class Login extends Component {
           >
             Play
           </button>
+          <ConfigButton />
         </form>
       </div>
     );
