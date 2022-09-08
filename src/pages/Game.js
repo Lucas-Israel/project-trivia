@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+// import PropTypes from 'prop-types';
+import Header from '../components/Header';
 
 class Game extends Component {
   render() {
     return (
-      <div id="trivia"><h1>GAME!</h1></div>
+      <div id="trivia">
+        <Header />
+        <h1>GAME!</h1>
+      </div>
     );
   }
 }
 
-export default Game;
+Game.propTypes = {
+
+};
+
+const mapStateToProps = () => ({
+
+});
+
+export default connect(mapStateToProps)(Game);

@@ -1,3 +1,5 @@
+import { USER_INFO } from '../actions/actionType';
+
 const INITIAL_STATE = {
   name: '',
   gravatarEmail: '',
@@ -5,8 +7,14 @@ const INITIAL_STATE = {
   assertions: 0,
 };
 
-function player(state = INITIAL_STATE, action) {
-  switch (action.payload) {
+function player(state = INITIAL_STATE, { type, payload }) {
+  switch (type) {
+  case USER_INFO:
+    return {
+      ...state,
+      name: payload.inputName,
+      gravatarEmail: payload.inputEmail,
+    };
   default:
     return state;
   }

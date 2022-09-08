@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ConfigButton from '../components/ConfigButton';
-import { fetchLogApi } from '../redux/actions';
+import { fetchLogApi, handleInfo } from '../redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -29,6 +29,7 @@ class Login extends Component {
     event.preventDefault();
     const { dispatch } = this.props;
     await dispatch(fetchLogApi());
+    dispatch(handleInfo(this.state));
     const { token, history } = this.props;
     localStorage.setItem('token', token);
     history.push('/game');
