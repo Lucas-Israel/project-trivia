@@ -35,5 +35,24 @@ describe('Testando o aplicativo', () => {
 
       expect(playBtn.disabled).toBe(false);
     })
+
+    test('03. Apertando o botão play recebe informações da API, salva no local storage e muda a tela para /game', async () => {
+      const { history } = renderWithRouterAndRedux(<App />)
+
+      const playerNameInput = screen.getByTestId('input-player-name');
+      const gravatarEmailInput = screen.getByTestId('input-gravatar-email');
+      let playBtn = screen.getByTestId('btn-play');
+
+      expect(playBtn.disabled).toBe(true);
+
+      userEvent.type(playerNameInput, 'abc');
+      userEvent.type(gravatarEmailInput, 'def');
+
+      expect(playBtn.disabled).toBe(false);
+
+      userEvent.click(playBtn)
+
+      await waitFor(() => expect(history.location.pathname).toBe('/game'))
+    })
   })
 })
