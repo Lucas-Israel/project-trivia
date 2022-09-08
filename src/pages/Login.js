@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import ConfigButton from '../components/ConfigButton';
+import { fetchLogApi } from '../redux/actions';
 
 class Login extends Component {
   constructor() {
@@ -20,6 +23,15 @@ class Login extends Component {
   handleInput = ({ target }) => {
     const { name, value } = target;
     this.setState({ [name]: value }, () => this.verifyBtn());
+  };
+
+  handleBtn = async (event) => {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    await dispatch(fetchLogApi());
+    const { token, history } = this.props;
+    localStorage.setItem('token', token);
+    history.push('/game');
   };
 
   render() {
@@ -58,4 +70,16 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+});
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  token: PropTypes.string.isRequired,
+};
+
+export default connect(mapStateToProps)(Login);
