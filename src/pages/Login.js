@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ConfigButton from '../components/ConfigButton';
 
 class Login extends Component {
   constructor() {
@@ -50,6 +51,7 @@ class Login extends Component {
           >
             Play
           </button>
+          <ConfigButton />
         </form>
       </div>
     );
