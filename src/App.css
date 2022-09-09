@@ -111,3 +111,11 @@ a {
 .user-img {
   width: 40px;
 }
+
+.score-section {
+  background-color: blue;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+  width: 30%;
+}

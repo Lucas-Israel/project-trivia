@@ -1,7 +1,7 @@
 import { USER_INFO } from '../actions/actionType';
 
 const INITIAL_STATE = {
-  name: '',
+  name: 'usuario nao identificado',
   gravatarEmail: '',
   score: 0,
   assertions: 0,
