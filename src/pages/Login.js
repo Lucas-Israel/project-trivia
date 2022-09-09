@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ConfigButton from '../components/ConfigButton';
 import { fetchLogApi, handleInfo } from '../redux/actions';
+import logo from '../trivia.png';
 
 class Login extends Component {
   constructor() {
@@ -38,8 +39,10 @@ class Login extends Component {
   render() {
     const { inputName, inputEmail, isBtnDisabled } = this.state;
     return (
-      <div>
-        <form>
+      <div className="login-div">
+        <form className="form">
+          <img src={ logo } className="App-logo" alt="logo" />
+          <br />
           <input
             data-testid="input-player-name"
             type="text"
@@ -61,6 +64,7 @@ class Login extends Component {
             type="submit"
             onClick={ this.handleBtn }
             disabled={ isBtnDisabled }
+            className="playbtn"
           >
             Play
           </button>

@@ -1,5 +1,7 @@
 body {
+  background-color: rgb(60, 60, 60);
   box-sizing: border-box;
+  color: white;
   margin: 0;
   padding: 0;
 }
@@ -60,4 +62,52 @@ body {
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+
+a {
+  text-decoration: none;
+}
+
+.login-div {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10%;
+}
+
+.form input {
+  align-self: center;
+  margin-bottom: 10px;
+  width: 250px;
+}
+
+.form button {
+  align-self: center;
+  margin-bottom: 10px;
+  width: 110px;
+}
+
+.form a {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  align-items: center;
+  background-color: green;
+  color: white;
+  display: flex;
+  font-weight: 700;
+  justify-content: space-between;
+  padding: 5px 20px 5px 10px;
+}
+
+.user-img {
+  width: 40px;
 }
