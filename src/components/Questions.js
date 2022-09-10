@@ -49,7 +49,7 @@ class Questions extends Component {
                   data-testid="correct-answer"
                   key={ i }
                   style={ { border: showAnswers && '3px solid rgb(6, 240, 15)' } }
-                  onClick={ this.showAnswersHandler }
+                  onClick={ showAnswers === false && this.showAnswersHandler }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
@@ -61,7 +61,7 @@ class Questions extends Component {
                     .indexOf(question)}` }
                   key={ i }
                   style={ { border: showAnswers && '3px solid red' } }
-                  onClick={ this.showAnswersHandler }
+                  onClick={ showAnswers === false && this.showAnswersHandler }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
