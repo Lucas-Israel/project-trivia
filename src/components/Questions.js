@@ -26,7 +26,7 @@ class Questions extends Component {
                   data-testid="correct-answer"
                   key={ i }
                 >
-                  {question}
+                  {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
               )
               : (
@@ -36,7 +36,7 @@ class Questions extends Component {
                     .indexOf(question)}` }
                   key={ i }
                 >
-                  {question}
+                  {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
               )))}
         </div>
