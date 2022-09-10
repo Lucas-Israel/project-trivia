@@ -9,11 +9,14 @@ class Questions extends Component {
     const inputForRandom = 0.5;
     const answer = results[0].incorrect_answers
       .concat(results[indexDaPergunta].correct_answer);
-    console.log(answer);
     return (
       <div>
         <div data-testid="question-category">{results[indexDaPergunta].category}</div>
-        <div data-testid="question-text">{results[indexDaPergunta].question}</div>
+        <div data-testid="question-text">
+          {results[indexDaPergunta].question
+            .replaceAll(/&#039;/g, '\'').replaceAll(/&\w*.;/g, '"')}
+
+        </div>
         <div data-testid="answer-options">
           {answer.sort(() => Math.random() - inputForRandom)
             .map((question, i) => (question === results[indexDaPergunta].correct_answer
