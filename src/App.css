@@ -2,6 +2,8 @@ body {
   background-color: rgb(60, 60, 60);
   box-sizing: border-box;
   color: white;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
 }
@@ -118,4 +120,20 @@ a {
   justify-content: space-between;
   padding: 3px;
   width: 30%;
+}
+
+.game {
+  align-items: center;
+  background-color: gray;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: fit-content;
+}
+
+.game-question div {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5px;
+  text-align: center;
 }

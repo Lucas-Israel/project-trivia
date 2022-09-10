@@ -16,7 +16,7 @@ class Game extends Component {
   render() {
     const { results } = this.props;
     return (
-      <div id="trivia">
+      <div className="trivia">
         <Header />
         {results.length > 1 && <Questions />}
       </div>
