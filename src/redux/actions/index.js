@@ -1,4 +1,9 @@
-import { LOG_REQUEST, LOG_RESPONSE, USER_INFO } from './actionType';
+import {
+  LOG_REQUEST,
+  LOG_RESPONSE,
+  USER_INFO,
+  FETCH_QUESTIONS,
+} from './actionType';
 
 export const logRequestApi = () => ({ type: LOG_REQUEST });
 export const logResponseApi = (payload) => ({
@@ -15,3 +20,11 @@ export function fetchLogApi() {
     return dispatch(logResponseApi(resultLogApi));
   };
 }
+
+export const getQuestions = (payload) => ({ type: FETCH_QUESTIONS, payload });
+
+export const fetchQuestions = (token) => async (dispatch) => {
+  const fetching = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
+  const result = await fetching.json();
+  return dispatch(getQuestions(result));
+};
