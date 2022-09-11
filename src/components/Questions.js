@@ -9,6 +9,7 @@ class Questions extends Component {
     showAnswers: false,
     answer: [],
     resultIndex: 0,
+    isNextBtnDisabled: true,
   };
 
   componentDidMount() {
@@ -26,8 +27,9 @@ class Questions extends Component {
   };
 
   showAnswersHandler = ({ difficulty }) => {
-    const { timer, dispatch } = this.props;
-    this.setState({ showAnswers: true });
+    const { timer, timerId, dispatch } = this.props;
+    clearInterval(timerId);
+    this.setState({ showAnswers: true, isNextBtnDisabled: false });
     const max = 3;
     const ten = 10;
     let points = 0;
@@ -38,9 +40,28 @@ class Questions extends Component {
     dispatch(updatePlacar(placar));
   };
 
+  handleWrongAnswers = () => {
+    const { timerId } = this.props;
+    this.setState({ showAnswers: true,
+      isNextBtnDisabled: false });
+    clearInterval(timerId);
+  };
+
+  handleNextBtn = () => {
+    const { results } = this.props;
+    this.setState((prev) => ({ resultIndex: prev.resultIndex + 1 }), () => {
+      const { resultIndex } = this.state;
+      const inputForRandom = 0.5;
+      const answer = results[resultIndex].incorrect_answers
+        .concat(results[resultIndex].correct_answer);
+      answer.sort(() => Math.random() - inputForRandom);
+      this.setState({ answer });
+    });
+  };
+
   render() {
     const { results, timer } = this.props;
-    const { showAnswers, answer, resultIndex } = this.state;
+    const { showAnswers, answer, resultIndex, isNextBtnDisabled } = this.state;
     return (
       <div className="game">
         <Timer />
@@ -74,13 +95,23 @@ class Questions extends Component {
                     .indexOf(question)}` }
                   key={ i }
                   style={ { border: showAnswers && '3px solid red' } }
-                  onClick={ () => this.setState({ showAnswers: true }) }
+                  onClick={ () => this.handleWrongAnswers() }
                   disabled={ timer === 0 }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
               )))}
           </div>
+          {
+            !isNextBtnDisabled && (
+              <button
+                data-testid="btn-next"
+                type="button"
+                onClick={ this.handleNextBtn }
+              >
+                Next
+              </button>)
+          }
         </div>
       </div>
     );
@@ -98,11 +129,13 @@ Questions.propTypes = {
   })).isRequired,
   timer: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
+  timerId: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({ questions: { results, timer } }) => ({
+const mapStateToProps = ({ questions: { results, timer, timerId } }) => ({
   results,
   timer,
+  timerId,
 });
 
 export default connect(mapStateToProps)(Questions);

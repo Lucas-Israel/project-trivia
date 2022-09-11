@@ -1,4 +1,4 @@
-import { FETCH_QUESTIONS, START_TIMER } from '../actions/actionType';
+import { FETCH_QUESTIONS, START_TIMER, GET_TIMERID } from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
@@ -13,6 +13,7 @@ const INITIAL_STATE = {
     },
   ],
   timer: 30,
+  timerId: 0,
   isBtnDisabled: false,
 };
 
@@ -27,6 +28,11 @@ function questions(state = INITIAL_STATE, { type, payload }) {
     return {
       ...state,
       timer: state.timer - 1,
+    };
+  case GET_TIMERID:
+    return {
+      ...state,
+      timerId: payload,
     };
   default:
     return state;
