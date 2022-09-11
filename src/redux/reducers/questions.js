@@ -1,5 +1,9 @@
 import {
-  FETCH_QUESTIONS, START_TIMER, GET_TIMERID, RESET_TIMER } from '../actions/actionType';
+  FETCH_QUESTIONS,
+  START_TIMER,
+  GET_TIMERID,
+  RESET_TIMER,
+} from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
