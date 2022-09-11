@@ -14,11 +14,11 @@ class Game extends Component {
   }
 
   render() {
-    const { results } = this.props;
+    const { results, history } = this.props;
     return (
       <div className="trivia">
         <Header />
-        {results.length > 1 && <Questions />}
+        {results.length > 1 && <Questions history={ history } />}
       </div>
     );
   }
