@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Timer from './Timer';
 
 class Questions extends Component {
   state = {
@@ -28,10 +29,11 @@ class Questions extends Component {
   };
 
   render() {
-    const { results } = this.props;
+    const { results, isBtnDisabled } = this.props;
     const { showAnswers, answer, resultIndex } = this.state;
     return (
       <div className="game">
+        <Timer />
         <div className="game-question">
           <div data-testid="question-category">{results[resultIndex].category}</div>
           <div data-testid="question-text">
@@ -50,6 +52,7 @@ class Questions extends Component {
                   key={ i }
                   style={ { border: showAnswers && '3px solid rgb(6, 240, 15)' } }
                   onClick={ showAnswers === false && this.showAnswersHandler }
+                  disabled={ isBtnDisabled }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
@@ -62,6 +65,7 @@ class Questions extends Component {
                   key={ i }
                   style={ { border: showAnswers && '3px solid red' } }
                   onClick={ showAnswers === false && this.showAnswersHandler }
+                  disabled={ isBtnDisabled }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
@@ -82,10 +86,12 @@ Questions.propTypes = {
       PropTypes.string,
     ),
   })).isRequired,
+  isBtnDisabled: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ questions: { results } }) => ({
+const mapStateToProps = ({ questions: { results, isBtnDisabled } }) => ({
   results,
+  isBtnDisabled,
 });
 
 export default connect(mapStateToProps)(Questions);

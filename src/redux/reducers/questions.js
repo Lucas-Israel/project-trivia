@@ -1,4 +1,4 @@
-import { FETCH_QUESTIONS } from '../actions/actionType';
+import { FETCH_QUESTIONS, START_TIMER, ANSWER_BTN_STATUS } from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
@@ -12,12 +12,27 @@ const INITIAL_STATE = {
       incorrect_answers: [],
     },
   ],
+  timer: 30,
+  isBtnDisabled: false,
 };
 
 function questions(state = INITIAL_STATE, { type, payload }) {
   switch (type) {
   case FETCH_QUESTIONS:
-    return { results: payload.results };
+    return {
+      ...state,
+      results: payload.results,
+    };
+  case START_TIMER:
+    return {
+      ...state,
+      timer: state.timer - 1,
+    };
+  case ANSWER_BTN_STATUS:
+    return {
+      ...state,
+      isBtnDisabled: payload,
+    };
   default:
     return state;
   }

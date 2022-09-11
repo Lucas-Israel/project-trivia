@@ -3,6 +3,8 @@ import {
   LOG_RESPONSE,
   USER_INFO,
   FETCH_QUESTIONS,
+  START_TIMER,
+  ANSWER_BTN_STATUS,
 } from './actionType';
 
 export const logRequestApi = () => ({ type: LOG_REQUEST });
@@ -28,3 +30,6 @@ export const fetchQuestions = (token) => async (dispatch) => {
   const result = await fetching.json();
   return dispatch(getQuestions(result));
 };
+
+export const startTimer = () => ({ type: START_TIMER });
+export const answerBtnStatus = (payload) => ({ type: ANSWER_BTN_STATUS, payload });
