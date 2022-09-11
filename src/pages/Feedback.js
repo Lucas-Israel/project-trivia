@@ -2,9 +2,29 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import md5 from 'crypto-js/md5';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+  handleRankingBtn = () => {
+    const { name, gravatarEmail, score } = this.props;
+    let array = [];
+    const storage = localStorage.getItem('ranking');
+    const obj = {
+      name,
+      score,
+      picture: `https://www.gravatar.com/avatar/${md5(gravatarEmail).toString()}`,
+    };
+    if (storage === null) {
+      array.push(obj);
+      localStorage.setItem('ranking', JSON.stringify(array));
+    } else {
+      array = JSON.parse(localStorage.getItem('ranking'));
+      array.push(obj);
+      localStorage.setItem('ranking', JSON.stringify(array));
+    }
+  };
+
   render() {
     const { score, assertions } = this.props;
     const correctAnswer = 3;
@@ -36,7 +56,11 @@ class Feedback extends Component {
           </button>
         </Link>
         <Link to="/ranking">
-          <button type="button" data-testid="btn-ranking">
+          <button
+            type="button"
+            data-testid="btn-ranking"
+            onClick={ this.handleRankingBtn }
+          >
             Ranking
           </button>
         </Link>
@@ -48,11 +72,15 @@ class Feedback extends Component {
 Feedback.propTypes = {
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
 };
 //
-const mapStateToProps = ({ player: { score, assertions } }) => ({
+const mapStateToProps = ({ player: { score, assertions, gravatarEmail, name } }) => ({
   score,
   assertions,
+  gravatarEmail,
+  name,
 });
 
 export default connect(mapStateToProps)(Feedback);
