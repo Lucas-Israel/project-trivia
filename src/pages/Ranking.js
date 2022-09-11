@@ -14,6 +14,11 @@ class Ranking extends Component {
             Play again
           </button>
         </Link>
+        <Link to="/">
+          <button type="button" data-testid="btn-go-home">
+            Home
+          </button>
+        </Link>
       </div>
     );
   }
