@@ -4,6 +4,7 @@ import {
   USER_INFO,
   FETCH_QUESTIONS,
   START_TIMER,
+  UPDATE_PLACAR,
 } from './actionType';
 
 export const logRequestApi = () => ({ type: LOG_REQUEST });
@@ -31,3 +32,4 @@ export const fetchQuestions = (token) => async (dispatch) => {
 };
 
 export const startTimer = () => ({ type: START_TIMER });
+export const updatePlacar = (payload) => ({ type: UPDATE_PLACAR, payload });
