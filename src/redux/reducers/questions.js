@@ -1,4 +1,4 @@
-import { FETCH_QUESTIONS, START_TIMER, ANSWER_BTN_STATUS } from '../actions/actionType';
+import { FETCH_QUESTIONS, START_TIMER } from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
@@ -27,11 +27,6 @@ function questions(state = INITIAL_STATE, { type, payload }) {
     return {
       ...state,
       timer: state.timer - 1,
-    };
-  case ANSWER_BTN_STATUS:
-    return {
-      ...state,
-      isBtnDisabled: payload,
     };
   default:
     return state;

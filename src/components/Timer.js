@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { answerBtnStatus } from '../redux/actions';
+import { startTimer } from '../redux/actions';
 
 class Timer extends Component {
   constructor() {
     super();
     this.state = {
-      currentTime: 30,
     };
   }
 
@@ -16,11 +15,9 @@ class Timer extends Component {
   }
 
   tick = () => {
-    const { currentTime } = this.state;
-    const { dispatch } = this.props;
-    this.setState((prevState) => ({
-      currentTime: currentTime === 0 ? 0 : (prevState.currentTime - 1),
-    }), () => { if (currentTime === 0) dispatch(answerBtnStatus(true)); });
+    const { dispatch, timer } = this.props;
+    const max = 30;
+    if (timer <= max && timer > 0) dispatch(startTimer());
   };
 
   handleTimer = () => {
@@ -30,11 +27,11 @@ class Timer extends Component {
   };
 
   render() {
-    const { currentTime } = this.state;
+    const { timer } = this.props;
     return (
       <div>
         <h3>Timer</h3>
-        <p>{ currentTime }</p>
+        <p>{ timer }</p>
       </div>
     );
   }
@@ -42,7 +39,12 @@ class Timer extends Component {
 
 Timer.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  timer: PropTypes.number.isRequired,
   // timerId: PropTypes.number.isRequired,
 };
 
-export default connect()(Timer);
+const mapStateToProps = (state) => ({
+  timer: state.questions.timer,
+});
+
+export default connect(mapStateToProps)(Timer);

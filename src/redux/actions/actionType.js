@@ -3,4 +3,3 @@ export const LOG_RESPONSE = 'LOG_RESPONSE';
 export const USER_INFO = 'USER_INFO';
 export const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
 export const START_TIMER = 'START_TIMER';
-export const ANSWER_BTN_STATUS = 'ANSWER_BTN_STATUS';

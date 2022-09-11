@@ -29,7 +29,7 @@ class Questions extends Component {
   };
 
   render() {
-    const { results, isBtnDisabled } = this.props;
+    const { results, timer } = this.props;
     const { showAnswers, answer, resultIndex } = this.state;
     return (
       <div className="game">
@@ -52,7 +52,7 @@ class Questions extends Component {
                   key={ i }
                   style={ { border: showAnswers && '3px solid rgb(6, 240, 15)' } }
                   onClick={ showAnswers === false && this.showAnswersHandler }
-                  disabled={ isBtnDisabled }
+                  disabled={ timer === 0 }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
@@ -65,7 +65,7 @@ class Questions extends Component {
                   key={ i }
                   style={ { border: showAnswers && '3px solid red' } }
                   onClick={ showAnswers === false && this.showAnswersHandler }
-                  disabled={ isBtnDisabled }
+                  disabled={ timer === 0 }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
                 </button>
@@ -86,12 +86,12 @@ Questions.propTypes = {
       PropTypes.string,
     ),
   })).isRequired,
-  isBtnDisabled: PropTypes.bool.isRequired,
+  timer: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({ questions: { results, isBtnDisabled } }) => ({
+const mapStateToProps = ({ questions: { results, timer } }) => ({
   results,
-  isBtnDisabled,
+  timer,
 });
 
 export default connect(mapStateToProps)(Questions);
