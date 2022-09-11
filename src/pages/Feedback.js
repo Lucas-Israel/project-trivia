@@ -8,7 +8,6 @@ class Feedback extends Component {
   render() {
     const { score, assertions } = this.props;
     const correctAnswer = 3;
-    const playerAssertions = 2;
     return (
       <div>
         <Header />
@@ -27,8 +26,8 @@ class Feedback extends Component {
         </div>
         <br />
         <div data-testid="feedback-text">
-          { (playerAssertions < correctAnswer && 'Could do better...')
-          || (playerAssertions >= correctAnswer && 'Well done!') }
+          { (assertions < correctAnswer && 'Could be better...')
+          || (assertions >= correctAnswer && 'Well Done!') }
         </div>
         <br />
         <Link to="/">
@@ -50,7 +49,7 @@ Feedback.propTypes = {
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
 };
-
+//
 const mapStateToProps = ({ player: { score, assertions } }) => ({
   score,
   assertions,

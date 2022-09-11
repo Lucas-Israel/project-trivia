@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Timer from './Timer';
-import { updatePlacar, resetTimer } from '../redux/actions';
+import { updatePlacar, resetTimer, updateAssertions } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -39,6 +39,7 @@ class Questions extends Component {
     if (difficulty === 'hard') points = max;
     const placar = ten + (timer * points);
     dispatch(updatePlacar(placar));
+    dispatch(updateAssertions());
   };
 
   handleWrongAnswers = () => {

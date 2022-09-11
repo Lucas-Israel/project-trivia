@@ -7,6 +7,7 @@ import {
   UPDATE_PLACAR,
   GET_TIMERID,
   RESET_TIMER,
+  UPDATE_ASSERTIONS,
 } from './actionType';
 
 export const logRequestApi = () => ({ type: LOG_REQUEST });
@@ -36,4 +37,5 @@ export const fetchQuestions = (token) => async (dispatch) => {
 export const startTimer = () => ({ type: START_TIMER });
 export const updatePlacar = (payload) => ({ type: UPDATE_PLACAR, payload });
 export const getTimerId = (payload) => ({ type: GET_TIMERID, payload });
-export const resetTimer = ({ type: RESET_TIMER });
+export const resetTimer = () => ({ type: RESET_TIMER });
+export const updateAssertions = () => ({ type: UPDATE_ASSERTIONS });
