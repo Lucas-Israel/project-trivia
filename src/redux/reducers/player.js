@@ -1,4 +1,4 @@
-import { USER_INFO } from '../actions/actionType';
+import { USER_INFO, UPDATE_PLACAR } from '../actions/actionType';
 
 const INITIAL_STATE = {
   name: 'usuario nao identificado',
@@ -14,6 +14,11 @@ function player(state = INITIAL_STATE, { type, payload }) {
       ...state,
       name: payload.inputName,
       gravatarEmail: payload.inputEmail,
+    };
+  case UPDATE_PLACAR:
+    return {
+      ...state,
+      score: state.score + payload,
     };
   default:
     return state;

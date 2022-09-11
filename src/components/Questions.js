@@ -2,6 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Timer from './Timer';
+import { updatePlacar } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -24,8 +25,17 @@ class Questions extends Component {
     this.setState({ answer });
   };
 
-  showAnswersHandler = () => {
+  showAnswersHandler = ({ difficulty }) => {
+    const { timer, dispatch } = this.props;
     this.setState({ showAnswers: true });
+    const max = 3;
+    const ten = 10;
+    let points = 0;
+    if (difficulty === 'easy') points = 1;
+    if (difficulty === 'medium') points = 2;
+    if (difficulty === 'hard') points = max;
+    const placar = ten + (timer * points);
+    dispatch(updatePlacar(placar));
   };
 
   render() {
@@ -51,7 +61,7 @@ class Questions extends Component {
                   data-testid="correct-answer"
                   key={ i }
                   style={ { border: showAnswers && '3px solid rgb(6, 240, 15)' } }
-                  onClick={ showAnswers === false && this.showAnswersHandler }
+                  onClick={ () => this.showAnswersHandler(results[resultIndex]) }
                   disabled={ timer === 0 }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
@@ -64,7 +74,7 @@ class Questions extends Component {
                     .indexOf(question)}` }
                   key={ i }
                   style={ { border: showAnswers && '3px solid red' } }
-                  onClick={ showAnswers === false && this.showAnswersHandler }
+                  onClick={ () => this.setState({ showAnswers: true }) }
                   disabled={ timer === 0 }
                 >
                   {question.replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
@@ -87,6 +97,7 @@ Questions.propTypes = {
     ),
   })).isRequired,
   timer: PropTypes.number.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ questions: { results, timer } }) => ({
