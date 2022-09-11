@@ -1,4 +1,5 @@
-import { FETCH_QUESTIONS, START_TIMER, GET_TIMERID } from '../actions/actionType';
+import {
+  FETCH_QUESTIONS, START_TIMER, GET_TIMERID, RESET_TIMER } from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
@@ -33,6 +34,11 @@ function questions(state = INITIAL_STATE, { type, payload }) {
     return {
       ...state,
       timerId: payload,
+    };
+  case RESET_TIMER:
+    return {
+      ...state,
+      timer: 30,
     };
   default:
     return state;

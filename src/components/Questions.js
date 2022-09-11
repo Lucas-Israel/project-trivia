@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Timer from './Timer';
-import { updatePlacar } from '../redux/actions';
+import { updatePlacar, resetTimer } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -10,6 +10,7 @@ class Questions extends Component {
     answer: [],
     resultIndex: 0,
     isNextBtnDisabled: true,
+    stopTimer: false,
   };
 
   componentDidMount() {
@@ -29,7 +30,7 @@ class Questions extends Component {
   showAnswersHandler = ({ difficulty }) => {
     const { timer, timerId, dispatch } = this.props;
     clearInterval(timerId);
-    this.setState({ showAnswers: true, isNextBtnDisabled: false });
+    this.setState({ showAnswers: true, isNextBtnDisabled: false, stopTimer: true });
     const max = 3;
     const ten = 10;
     let points = 0;
@@ -43,33 +44,37 @@ class Questions extends Component {
   handleWrongAnswers = () => {
     const { timerId } = this.props;
     this.setState({ showAnswers: true,
-      isNextBtnDisabled: false });
+      isNextBtnDisabled: false,
+      stopTimer: true });
     clearInterval(timerId);
   };
 
   handleNextBtn = () => {
-    const { results } = this.props;
+    const { results, dispatch } = this.props;
     this.setState((prev) => ({ resultIndex: prev.resultIndex + 1 }), () => {
       const { resultIndex } = this.state;
       const inputForRandom = 0.5;
       const answer = results[resultIndex].incorrect_answers
         .concat(results[resultIndex].correct_answer);
       answer.sort(() => Math.random() - inputForRandom);
-      this.setState({ answer });
+      this.setState({
+        answer, showAnswers: false, stopTimer: false, isNextBtnDisabled: true });
     });
+    dispatch(resetTimer);
   };
 
   render() {
-    const { results, timer } = this.props;
-    const { showAnswers, answer, resultIndex, isNextBtnDisabled } = this.state;
+    const { results, timer, history } = this.props;
+    const { showAnswers, answer, resultIndex, isNextBtnDisabled, stopTimer } = this.state;
+    const maxQuesInd = 4;
     return (
       <div className="game">
-        <Timer />
+        {(stopTimer && <h3>Tempo parado</h3>) || <Timer />}
         <div className="game-question">
           <div data-testid="question-category">{results[resultIndex].category}</div>
           <div data-testid="question-text">
             {results[resultIndex].question
-              .replaceAll(/&#039;/g, '\'').replaceAll(/&\w*.;/g, '"')}
+              .replaceAll(/&#039;/g, '\'').replaceAll(/&eacute;/g, 'é').replaceAll(/&\w*.;/g, '"')}
 
           </div>
         </div>
@@ -103,11 +108,12 @@ class Questions extends Component {
               )))}
           </div>
           {
-            !isNextBtnDisabled && (
+            (!isNextBtnDisabled || timer === 0) && (
               <button
                 data-testid="btn-next"
                 type="button"
-                onClick={ this.handleNextBtn }
+                onClick={ resultIndex === maxQuesInd
+                  ? () => history.push('/feedback') : this.handleNextBtn }
               >
                 Next
               </button>)
@@ -130,6 +136,9 @@ Questions.propTypes = {
   timer: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
   timerId: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = ({ questions: { results, timer, timerId } }) => ({
