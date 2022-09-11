@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { startTimer } from '../redux/actions';
+import { startTimer, getTimerId } from '../redux/actions';
 
 class Timer extends Component {
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
-
   componentDidMount() {
     this.handleTimer();
   }
@@ -21,9 +15,10 @@ class Timer extends Component {
   };
 
   handleTimer = () => {
+    const { dispatch } = this.props;
     const sec = 1000;
-    setInterval(() => this.tick(), sec);
-    // this.setState({ timerId });
+    const timerId = setInterval(() => this.tick(), sec);
+    dispatch(getTimerId(timerId));
   };
 
   render() {
@@ -40,7 +35,6 @@ class Timer extends Component {
 Timer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   timer: PropTypes.number.isRequired,
-  // timerId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
