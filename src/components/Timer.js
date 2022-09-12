@@ -26,7 +26,7 @@ class Timer extends Component {
     return (
       <div>
         <h3>Timer</h3>
-        <p>{ timer }</p>
+        <p data-testid="eusouotempo">{ timer }</p>
       </div>
     );
   }
