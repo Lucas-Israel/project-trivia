@@ -6,6 +6,10 @@ import md5 from 'crypto-js/md5';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+  componentDidMount() {
+    this.handleRankingBtn();
+  }
+
   handleRankingBtn = () => {
     const { name, gravatarEmail, score } = this.props;
     let array = [];
@@ -39,7 +43,7 @@ class Feedback extends Component {
           <div data-testid="feedback-total-score">
             {score}
           </div>
-          Tentativas:
+          Acertos:
           <div data-testid="feedback-total-question">
             {assertions}
           </div>
@@ -59,7 +63,6 @@ class Feedback extends Component {
           <button
             type="button"
             data-testid="btn-ranking"
-            onClick={ this.handleRankingBtn }
           >
             Ranking
           </button>

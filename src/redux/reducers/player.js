@@ -1,4 +1,6 @@
-import { USER_INFO, UPDATE_PLACAR, UPDATE_ASSERTIONS } from '../actions/actionType';
+import {
+  USER_INFO,
+  UPDATE_PLACAR, UPDATE_ASSERTIONS, CLEAR_TOKEN_RESULTS } from '../actions/actionType';
 
 const INITIAL_STATE = {
   name: 'usuario nao identificado',
@@ -25,6 +27,8 @@ function player(state = INITIAL_STATE, { type, payload }) {
       ...state,
       assertions: state.assertions + 1,
     };
+  case CLEAR_TOKEN_RESULTS:
+    return { ...state, score: 0 };
   default:
     return state;
   }

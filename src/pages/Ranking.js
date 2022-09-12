@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
 
 class Ranking extends Component {
   constructor() {
@@ -14,7 +13,7 @@ class Ranking extends Component {
   componentDidMount() {
     const one = -1;
     const ranking = JSON.parse(localStorage.getItem('ranking'));
-    ranking.sort((a, b) => ((a.score < b.score) ? 1 : one));
+    ranking.sort((a, b) => ((a.score <= b.score) ? 1 : one));
     this.setState({ ranking });
   }
 
@@ -22,15 +21,14 @@ class Ranking extends Component {
     const { ranking } = this.state;
     return (
       <div>
-        <Header />
         <div data-testid="ranking-title">Ranking</div>
         <ul>
           {
             ranking.map((item, index) => (
               <li key={ item.name }>
-                <img src={ item.product } alt={ `player${index}` } />
-                <p data-testid={ `player-name-${index}` }>{item.name}</p>
-                <p data-testid={ `player-score-${index}` }>{item.score}</p>
+                <img src={ item.picture } alt={ `player${index}` } />
+                <div data-testid={ `player-name-${index}` }>{item.name}</div>
+                <div data-testid={ `player-score-${index}` }>{item.score}</div>
               </li>
             ))
           }

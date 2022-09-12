@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ConfigButton from '../components/ConfigButton';
-import { fetchLogApi, handleInfo } from '../redux/actions';
+import { fetchLogApi, handleInfo, clearTokenResults } from '../redux/actions';
 import logo from '../trivia.png';
 
 class Login extends Component {
@@ -13,6 +13,11 @@ class Login extends Component {
       inputEmail: '',
       isBtnDisabled: true,
     };
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(clearTokenResults);
   }
 
   verifyBtn = () => {

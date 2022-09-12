@@ -3,6 +3,7 @@ import {
   START_TIMER,
   GET_TIMERID,
   RESET_TIMER,
+  CLEAR_TOKEN_RESULTS,
 } from '../actions/actionType';
 
 const INITIAL_STATE = {
@@ -44,6 +45,8 @@ function questions(state = INITIAL_STATE, { type, payload }) {
       ...state,
       timer: 30,
     };
+  case CLEAR_TOKEN_RESULTS:
+    return { ...state, results: [] };
   default:
     return state;
   }

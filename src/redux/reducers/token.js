@@ -1,4 +1,4 @@
-import { LOG_REQUEST, LOG_RESPONSE } from '../actions/actionType';
+import { LOG_REQUEST, LOG_RESPONSE, CLEAR_TOKEN_RESULTS } from '../actions/actionType';
 
 const INITIAL_STATE = {
   response_code: 0,
@@ -17,6 +17,8 @@ function token(state = INITIAL_STATE, action) {
       response_message: action.payload.response_message,
       token: action.payload.token,
     };
+  case CLEAR_TOKEN_RESULTS:
+    return { ...state, token: '' };
   default:
     return state;
   }
