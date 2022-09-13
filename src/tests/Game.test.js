@@ -1,39 +1,30 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { waitFor } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import App from '../App';
+import loginHelper from './helpers/loginHelper';
+import invalidToken from './helpers/invalidToken';
+import returnInvalid from './helpers/returnCode3';
+
+afterEach(() => jest.clearAllMocks());
 
 describe('Testando caso o componente Game receba uma "INVALID_TOKEN"', () => {
-  it('01. Recebendo "INVALID_TOKEN"', async () => {
-    const {history} = renderWithRouterAndRedux(<App />)
-
-    const invalid = {
-      "response_code": 3,
-      "results": []
-    }
-
+  it('01. Recebendo "INVALID_TOKEN" retorna para a pagina de login', async () => {
     jest.spyOn(global, 'fetch');
+
+    const {history, store} = renderWithRouterAndRedux(<App/>);
+
+    loginHelper('abc', 'def@ghi');
+
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(invalid),
+      json: jest.fn().mockResolvedValue(invalidToken),
     });
 
-    const nameInput = screen.getByTestId('input-player-name');
-    const emailInput = screen.getByTestId('input-gravatar-email');
-    let btnPlay = screen.getByTestId('btn-play');
-    let enderecoAtual = history.location.pathname;
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnInvalid),
+    });
 
-    expect(enderecoAtual).toBe('/');
-
-    expect(btnPlay).toBeDisabled();
-
-    userEvent.type(nameInput, 'abc');
-    userEvent.type(emailInput, 'def@ghi');
-
-    btnPlay = screen.getByTestId('btn-play');
-
-    expect(btnPlay.innerHTML).toBe('Play');
-
-    userEvent.click(btnPlay);
+    await waitFor(() => expect(history.location.pathname).toEqual('/'));
+ 
   })
 })

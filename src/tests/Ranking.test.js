@@ -2,66 +2,77 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
-import App from '../App'
+import App from '../App';
+import loginHelper from './helpers/loginHelper';
+import winHelper from './helpers/winHelper';
+import returnMock from './helpers/APIReturnMock';
+import token from './helpers/tokenMock';
 
 describe('Testa a pagina de ranking', () => {
-  it('A pagina renderiza corretamente', async () => {
+  it('O ranking é atualizado corretamente, primeiro com um jogador que ganha todas, depois outro que perde todas e por ultimo um jogador que acerta 3 e erra 2', async () => {
+    jest.spyOn(global, 'fetch');
+    
     let { history } = renderWithRouterAndRedux(<App/>);
-    let nameInput = screen.getByTestId('input-player-name');
-    let emailInput = screen.getByTestId('input-gravatar-email');
-    let btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay).toBeDisabled();
-  
-    userEvent.type(nameInput, 'abc');
-    userEvent.type(emailInput, 'def@ghi');
-  
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay.innerHTML).toBe('Play');
-  
-    userEvent.click(btnPlay);
-  
+
+    loginHelper('abc', 'def@ghi');
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+    
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
+
     await waitFor(() => expect(history.location.pathname).toEqual('/game'));
   
-    for (let index = 0; index < 5; index += 1 ) {
-      let correctAnw = await waitFor(() => screen.getByTestId('correct-answer'));
-      userEvent.click(correctAnw);
-      let nextBtn = screen.getByTestId('btn-next');
-      userEvent.click(nextBtn);
-    }
+    await winHelper(5);
   
     await waitFor(() => expect(history.location.pathname).toEqual('/feedback'));
   
-    const playAgainBtn = screen.getByTestId('btn-play-again');
+    let playAgainBtn = screen.getByTestId('btn-play-again');
   
-    userEvent.click(playAgainBtn)
+    userEvent.click(playAgainBtn);
   
     await waitFor(() => expect(history.location.pathname).toEqual('/'));
-  
-    nameInput = screen.getByTestId('input-player-name');
-    emailInput = screen.getByTestId('input-gravatar-email');
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay).toBeDisabled();
-  
-    userEvent.type(nameInput, 'cba');
-    userEvent.type(emailInput, 'fed@ihg');
-  
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay.innerHTML).toBe('Play');
-  
-    userEvent.click(btnPlay);
+    
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+
+    loginHelper('cba', 'fed@ihg');
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
   
     await waitFor(() => expect(history.location.pathname).toEqual('/game'));
   
-    for (let index = 0; index < 5; index += 1 ) {
-      let correctAnw = await waitFor(() => screen.getByTestId('wrong-answer-0'));
-      userEvent.click(correctAnw);
-      let nextBtn = screen.getByTestId('btn-next');
-      userEvent.click(nextBtn);
-    }
+    await winHelper(0);
+
+    await waitFor(() => expect(history.location.pathname).toEqual('/feedback'));
+  
+    playAgainBtn = screen.getByTestId('btn-play-again');
+  
+    userEvent.click(playAgainBtn);
+
+    await waitFor(() => expect(history.location.pathname).toEqual('/'));
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+
+    loginHelper('aaa', 'bbb@ccc');
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
+
+    await waitFor(() => expect(history.location.pathname).toEqual('/game'));
+  
+    await winHelper(3);
+  
+    await waitFor(() => expect(history.location.pathname).toEqual('/feedback'));
 
     const rankingBtn = screen.getByTestId('btn-ranking');
 
@@ -69,14 +80,10 @@ describe('Testa a pagina de ranking', () => {
 
     await waitFor(() => expect(history.location.pathname).toEqual('/ranking'));
 
-    const homeBtn = screen.getByTestId('btn-go-home');
+    const ranking = screen.getAllByTestId(/player-score-\d/g)
 
-    expect(homeBtn).toBeInTheDocument();
+    expect(ranking.length).toBe(3)
 
-    const vamosVerOIntruzo = screen.getAllByTestId(/player-name-\d/g)
-
-    expect(vamosVerOIntruzo.length).toBe(2)
-
-    expect(vamosVerOIntruzo[0].score > vamosVerOIntruzo[1].score).toBe(false)
+    expect(ranking[0].innerHTML > ranking[1].innerHTML > ranking[2].innerHTML).toBe(true)
   })
 })

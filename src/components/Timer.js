@@ -8,16 +8,13 @@ class Timer extends Component {
     this.handleTimer();
   }
 
-  tick = () => {
-    const { dispatch, timer } = this.props;
-    const max = 30;
-    if (timer <= max && timer > 0) dispatch(startTimer());
-  };
-
   handleTimer = () => {
     const { dispatch } = this.props;
     const sec = 1000;
-    const timerId = setInterval(() => this.tick(), sec);
+    const timerId = setInterval(() => {
+      const { timer } = this.props;
+      return timer > 0 && dispatch(startTimer());
+    }, sec);
     dispatch(getTimerId(timerId));
   };
 
