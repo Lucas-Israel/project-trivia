@@ -9,25 +9,25 @@ import returnMock from './helpers/APIReturnMock';
 
 
 describe('Testando o componente Time', () => {
-  jest.setTimeout(50000)
-  it ('01. O timer vai de 30 a 0 em 30 segundos (aproximadamente)', async () => {
-    jest.clearAllMocks();
-    
+  jest.setTimeout(5000)
+  it ('01. O timer vai de 30 a 0 em 30 segundos (aproximadamente)', async () => { 
     jest.spyOn(global, 'fetch');
 
-    renderWithRouterAndRedux(<App/>)
-
-    loginHelper('abc', 'def@ghi');
+    const { store } = renderWithRouterAndRedux(<App/>)
 
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(token),
     });
+    
+    loginHelper('abc', 'def@ghi');
 
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(returnMock),
     });
 
     let correctBtn = await screen.findByTestId('correct-answer');
+
+    await waitFor(() => expect(store.getState().token.token).toBe('f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6'))
 
     expect(correctBtn).not.toBeDisabled();
 

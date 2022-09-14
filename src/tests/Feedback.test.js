@@ -26,20 +26,22 @@ describe('Testando a pagina Feedback', () => {
   it('02. Testa a funcionalidade da pagina feedback', async () => {
     jest.spyOn(global, 'fetch');
 
-    let { history } = renderWithRouterAndRedux(<App/>);
-
-    loginHelper('abc', 'def@ghi');
+    let { history, store } = renderWithRouterAndRedux(<App/>);
 
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(token),
     });
-    
+
+    loginHelper('abc', 'def@ghi');
+
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(returnMock),
     });
-    
+
     await waitFor(() => expect(history.location.pathname).toEqual('/game'));
 
+    await waitFor(() => expect(store.getState().token.token).toBe('f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6'))
+    
     await winHelper(5);
 
     await waitFor(() => expect(history.location.pathname).toBe('/feedback'));
