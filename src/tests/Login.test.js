@@ -3,6 +3,9 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import App from '../App';
+import loginHelper from './helpers/loginHelper';
+import returnMock from './helpers/APIReturnMock';
+import token from './helpers/tokenMock';
 
 describe('Testando a página de login', () => {
   test('01. Os inputs de playername e email funcionam corretamente', () => {
@@ -36,21 +39,20 @@ describe('Testando a página de login', () => {
   })
 
   test('03. Apertando o botão play recebe informações da API, salva no local storage e muda a tela para /game', async () => {
+    jest.spyOn(global, 'fetch');
+    
     const { history } = renderWithRouterAndRedux(<App />)
 
-    const playerNameInput = screen.getByTestId('input-player-name');
-    const gravatarEmailInput = screen.getByTestId('input-gravatar-email');
-    let playBtn = screen.getByTestId('btn-play');
+    loginHelper('abc', 'def@ghi');
 
-    expect(playBtn.disabled).toBe(true);
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+    
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
 
-    userEvent.type(playerNameInput, 'abc');
-    userEvent.type(gravatarEmailInput, 'def');
-
-    expect(playBtn.disabled).toBe(false);
-
-    userEvent.click(playBtn)
-
-    await waitFor(() => expect(history.location.pathname).toBe('/game'))
+    await waitFor(() => expect(history.location.pathname).toBe('/game'));
   })
 })

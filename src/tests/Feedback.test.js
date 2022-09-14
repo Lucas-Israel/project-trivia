@@ -4,10 +4,13 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import App from '../App';
 import Feedback from '../pages/Feedback';
+import loginHelper from './helpers/loginHelper';
+import winHelper from './helpers/winHelper';
+import returnMock from './helpers/APIReturnMock';
+import token from './helpers/tokenMock';
 
 describe('Testando a pagina Feedback', () => {
-
-  it('Renderiza corretamente a pagina feedback', () => {
+  it('01. Renderiza corretamente a pagina feedback', () => {
     renderWithRouterAndRedux(<Feedback/>);
     const feedbackText = screen.getByTestId('feedback-text');
     const acertos = screen.getByTestId('feedback-total-question');
@@ -20,90 +23,31 @@ describe('Testando a pagina Feedback', () => {
     const storage = window.localStorage.getItem('ranking')
   })
   
-  it('Testa a funcionalidade da pagina feedback', async () => {
+  it('02. Testa a funcionalidade da pagina feedback', async () => {
+    jest.spyOn(global, 'fetch');
+
     let { history } = renderWithRouterAndRedux(<App/>);
-    const nameInput = screen.getByTestId('input-player-name');
-    const emailInput = screen.getByTestId('input-gravatar-email');
-    let btnPlay = screen.getByTestId('btn-play');
-    let enderecoAtual = history.location.pathname;
 
-    expect(enderecoAtual).toBe('/');
+    loginHelper('abc', 'def@ghi');
 
-    expect(btnPlay).toBeDisabled();
-
-    userEvent.type(nameInput, 'abc');
-    userEvent.type(emailInput, 'def@ghi');
-
-    btnPlay = screen.getByTestId('btn-play');
-
-    expect(btnPlay.innerHTML).toBe('Play');
-
-    userEvent.click(btnPlay);
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+    
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
     
     await waitFor(() => expect(history.location.pathname).toEqual('/game'));
-  })
-  
-  it('Testa se o jogo corre normalmente', async () => {
-    let { history } = renderWithRouterAndRedux(<App/>);
-    let nameInput = screen.getByTestId('input-player-name');
-    let emailInput = screen.getByTestId('input-gravatar-email');
-    let btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay).toBeDisabled();
-  
-    userEvent.type(nameInput, 'abc');
-    userEvent.type(emailInput, 'def@ghi');
-  
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay.innerHTML).toBe('Play');
-  
-    userEvent.click(btnPlay);
-  
-    await waitFor(() => expect(history.location.pathname).toEqual('/game'));
-  
-    for (let index = 0; index < 5; index += 1 ) {
-      let correctAnw = await waitFor(() => screen.getByTestId('correct-answer'));
-      userEvent.click(correctAnw);
-      let nextBtn = screen.getByTestId('btn-next');
-      userEvent.click(nextBtn);
-    }
-  
-    await waitFor(() => expect(history.location.pathname).toEqual('/feedback'));
-  
-    const playAgainBtn = screen.getByTestId('btn-play-again');
-  
-    userEvent.click(playAgainBtn)
-  
-    await waitFor(() => expect(history.location.pathname).toEqual('/'));
-  
-    nameInput = screen.getByTestId('input-player-name');
-    emailInput = screen.getByTestId('input-gravatar-email');
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay).toBeDisabled();
-  
-    userEvent.type(nameInput, 'cba');
-    userEvent.type(emailInput, 'fed@ihg');
-  
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay.innerHTML).toBe('Play');
-  
-    userEvent.click(btnPlay);
-  
-    await waitFor(() => expect(history.location.pathname).toEqual('/game'));
-  
-    for (let index = 0; index < 5; index += 1 ) {
-      let correctAnw = await waitFor(() => screen.getByTestId('wrong-answer-0'));
-      userEvent.click(correctAnw);
-      let nextBtn = screen.getByTestId('btn-next');
-      userEvent.click(nextBtn);
-    }
-  
-    const localStorag = JSON.parse(window.localStorage.getItem('ranking'));
-  
-    expect(localStorag.length).toBeGreaterThan(2)
+
+    await winHelper(5);
+
+    await waitFor(() => expect(history.location.pathname).toBe('/feedback'));
+
+    const feedbackText = screen.getByTestId('feedback-text');
+
+    expect(feedbackText.innerHTML).toBe('Well Done!');
+
   })
 })
 

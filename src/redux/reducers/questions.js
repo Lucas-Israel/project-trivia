@@ -28,6 +28,7 @@ function questions(state = INITIAL_STATE, { type, payload }) {
   case FETCH_QUESTIONS:
     return {
       ...state,
+      response_code: payload.response_code,
       results: payload.results,
     };
   case START_TIMER:

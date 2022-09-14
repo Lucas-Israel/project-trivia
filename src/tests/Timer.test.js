@@ -2,40 +2,46 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
-import App from '../App'
-import Game from '../pages/Game';
-import {stateMock} from './helpers/meAjude'
+import loginHelper from './helpers/loginHelper';
+import App from '../App';
+import token from './helpers/tokenMock';
+import returnMock from './helpers/APIReturnMock';
+
 
 describe('Testando o componente Time', () => {
   jest.setTimeout(50000)
-  it ('O timer vai de 30 a 0 em 30 segundos (aproximadamente)', async () => {
-    const { history } = renderWithRouterAndRedux(<App />)
+  it ('01. O timer vai de 30 a 0 em 30 segundos (aproximadamente)', async () => {
+    jest.clearAllMocks();
+    
+    jest.spyOn(global, 'fetch');
 
-    let nameInput = screen.getByTestId('input-player-name');
-    let emailInput = screen.getByTestId('input-gravatar-email');
-    let btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay).toBeDisabled();
-  
-    userEvent.type(nameInput, 'abc');
-    userEvent.type(emailInput, 'def@ghi');
-  
-    btnPlay = screen.getByTestId('btn-play');
-  
-    expect(btnPlay.innerHTML).toBe('Play');
-  
-    userEvent.click(btnPlay);
+    renderWithRouterAndRedux(<App/>)
+
+    loginHelper('abc', 'def@ghi');
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(token),
+    });
+
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(returnMock),
+    });
 
     let correctBtn = await screen.findByTestId('correct-answer');
 
     expect(correctBtn).not.toBeDisabled();
 
-    const timer = screen.getByTestId('eusouotempo')
+    let timer = screen.getByTestId('eusouotempo')
 
     await waitFor(() => {
-      expect(correctBtn).toBeDisabled()
-      expect(timer.innerHTML).toBe('0')
-    }, {timeout: 32000})
+      expect(correctBtn).not.toBeDisabled();
+      expect(timer.innerHTML).toBe('30');
+    }, {timeout: 0})
 
+    await waitFor(() => {
+      expect(correctBtn).not.toBeDisabled();
+      expect(timer.innerHTML).toBe('28');
+      userEvent.click(correctBtn);
+    }, {timeout: 3000})
   })
 })
